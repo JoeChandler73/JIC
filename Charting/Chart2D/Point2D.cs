@@ -27,5 +27,14 @@ namespace JIC.Charting
         /// The y value.
         /// </summary>
         public double Y;
+
+        /// <summary>
+        /// String representation.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return string.Format("{0},{1}", X, Y);
+        }
     }
 }
