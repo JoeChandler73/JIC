@@ -4,3 +4,7 @@ obj
 
 # mstest test results
 TestResults
+
+
+# visual studio client files
+*.suo
