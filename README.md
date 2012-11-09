@@ -1,4 +1,0 @@
-JIC
-===
-
-Personal Repository
