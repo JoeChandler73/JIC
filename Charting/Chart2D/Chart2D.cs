@@ -5,9 +5,26 @@ using System.ComponentModel;
 
 namespace JIC.Charting
 {
+    /// <summary>
+    /// Chart for displaying xy data in 2D
+    /// </summary>
     public partial class Chart2D : UserControl
     {
-        private ChartArea area;
+        #region Private Members
+
+        /// <summary>
+        /// The canvas or background area for this chart.
+        /// </summary>
+        private ChartArea _area;
+
+        /// <summary>
+        /// The title to display on the chart.
+        /// </summary>
+        private ChartTitle _title;
+
+        #endregion
+
+        #region Constructors
 
         public Chart2D()
         {
@@ -15,35 +32,72 @@ namespace JIC.Charting
 
             this.SetStyle(ControlStyles.DoubleBuffer | ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.Opaque, true);
 
-            area = new ChartArea(this);
+            _area = new ChartArea(this);
+            _title = new ChartTitle(this);
         }
 
+        #endregion
+
+        #region Public Members
+
+        /// <summary>
+        /// The canvas or background area for this chart.
+        /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public ChartArea Area
         {
-            get { return area; }
+            get { return _area; }
 
             set
             {
                 if (value != null)
                 {
-                    area = value;
+                    _area = value;
                 }
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+        public ChartTitle Title
+        {
+            get { return _title; }
+
+            set
+            {
+                if (value != null)
+                {
+                    _title = value;
+                }
+            }
+        }
+
+        #endregion
+
+        #region Protected Members
+
+        /// <summary>
+        /// Paint the chart.
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnPaint(PaintEventArgs e)
         {
             Graphics g = e.Graphics;
 
-            area.Draw(g);
+            _area.Draw(g);
+            _title.Draw(g);
         }
 
+        /// <summary>
+        /// Handles SizeChanged event by repainting the chart.
+        /// </summary>
+        /// <param name="arguments"></param>
         protected override void OnSizeChanged(EventArgs arguments)
         {
             base.OnSizeChanged(arguments);
 
             Invalidate();
         }
+
+        #endregion
     }
 }

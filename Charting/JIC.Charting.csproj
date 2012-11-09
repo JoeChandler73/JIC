@@ -46,6 +46,8 @@
     </Compile>
     <Compile Include="Chart2D\ChartArea.cs" />
     <Compile Include="Chart2D\ChartAreaConverter.cs" />
+    <Compile Include="Chart2D\ChartTitle.cs" />
+    <Compile Include="Chart2D\ChartTitleConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
