@@ -49,6 +49,11 @@
             this._chart.Axes.YTick = 1D;
             this._chart.Axes.YTickFormat = "N2";
             this._chart.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._chart.Grid.Colour = System.Drawing.Color.LightGray;
+            this._chart.Grid.DashStyle = System.Drawing.Drawing2D.DashStyle.Dot;
+            this._chart.Grid.Thickness = 1F;
+            this._chart.Grid.XGridVisible = true;
+            this._chart.Grid.YGridVisible = true;
             this._chart.Labels.Colour = System.Drawing.Color.Gray;
             this._chart.Labels.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this._chart.Labels.LabelX = "X Axis";

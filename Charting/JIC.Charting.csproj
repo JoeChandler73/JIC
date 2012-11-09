@@ -52,6 +52,8 @@
     <Compile Include="Chart2D\TypeConverters\ChartTitleConverter.cs" />
     <Compile Include="Chart2D\TypeConverters\AxesLabelsConverter.cs" />
     <Compile Include="Chart2D\TypeConverters\Axes2DConverter.cs" />
+    <Compile Include="Chart2D\Grid2D.cs" />
+    <Compile Include="Chart2D\TypeConverters\Grid2DConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

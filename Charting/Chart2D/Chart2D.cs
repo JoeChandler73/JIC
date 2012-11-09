@@ -18,6 +18,11 @@ namespace JIC.Charting
         private ChartArea _area;
 
         /// <summary>
+        /// The chart grid.
+        /// </summary>
+        private Grid2D _grid;
+
+        /// <summary>
         /// The title to display on the chart.
         /// </summary>
         private ChartTitle _title;
@@ -43,6 +48,7 @@ namespace JIC.Charting
             this.SetStyle(ControlStyles.DoubleBuffer | ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.Opaque, true);
 
             _area = new ChartArea(this);
+            _grid = new Grid2D(this);
             _title = new ChartTitle(this);
             _labels = new AxesLabels(this);
             _axes = new Axes2D(this);
@@ -65,6 +71,20 @@ namespace JIC.Charting
                 if (value != null)
                 {
                     _area = value;
+                }
+            }
+        }
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+        public Grid2D Grid
+        {
+            get { return _grid; }
+
+            set
+            {
+                if (value != null)
+                {
+                    _grid = value;
                 }
             }
         }
@@ -124,6 +144,7 @@ namespace JIC.Charting
             Graphics g = e.Graphics;
 
             _area.Draw(g);
+            _grid.Draw(g);
             _title.Draw(g);
             _labels.Draw(g);
             _axes.Draw(g);
