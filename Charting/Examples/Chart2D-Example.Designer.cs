@@ -34,8 +34,20 @@
             // _chart
             // 
             this._chart.Area.BackColour = System.Drawing.Color.White;
-            this._chart.Area.Border = 30;
+            this._chart.Area.Border = 50;
             this._chart.Area.BorderColour = System.Drawing.Color.Silver;
+            this._chart.Axes.TickColour = System.Drawing.Color.Silver;
+            this._chart.Axes.TickFont = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this._chart.Axes.XAutoScale = false;
+            this._chart.Axes.XMax = 5D;
+            this._chart.Axes.XMin = -5D;
+            this._chart.Axes.XTick = 1D;
+            this._chart.Axes.XTickFormat = "N2";
+            this._chart.Axes.YAutoScale = false;
+            this._chart.Axes.YMax = 3D;
+            this._chart.Axes.YMin = -3D;
+            this._chart.Axes.YTick = 1D;
+            this._chart.Axes.YTickFormat = "N2";
             this._chart.Dock = System.Windows.Forms.DockStyle.Fill;
             this._chart.Labels.Colour = System.Drawing.Color.Gray;
             this._chart.Labels.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));

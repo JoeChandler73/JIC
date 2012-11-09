@@ -124,7 +124,7 @@ namespace JIC.Charting
         }
 
         /// <summary>
-        /// Draw this chart area.
+        /// Draw the chart area.
         /// </summary>
         /// <param name="g"></param>
         internal void Draw(Graphics g)

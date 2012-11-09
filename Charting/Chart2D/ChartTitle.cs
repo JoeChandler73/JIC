@@ -98,6 +98,10 @@ namespace JIC.Charting
 
         #region Internal Members
 
+        /// <summary>
+        /// Draw the chart title.
+        /// </summary>
+        /// <param name="g"></param>
         internal void Draw(Graphics g)
         {
             using (Brush brush = new SolidBrush(Colour))

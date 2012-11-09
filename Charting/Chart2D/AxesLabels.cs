@@ -133,7 +133,7 @@ namespace JIC.Charting
                                  Font,
                                  brush,
                                  _chart.Area.ChartRectangle.Width / 2 - size.Width / 2,
-                                 _chart.Area.ChartRectangle.Bottom - size.Height -_chart.Area.Border / 4);
+                                 _chart.Area.ChartRectangle.Bottom - size.Height);
                 }
 
                 if (LabelY.Length > 0)
@@ -144,7 +144,7 @@ namespace JIC.Charting
 
                     GraphicsState graphicsState = g.Save();
 
-                    g.TranslateTransform(_chart.Area.ChartRectangle.X - size.Height / 2 + _chart.Area.Border / 2,
+                    g.TranslateTransform(_chart.Area.ChartRectangle.X,
                                          _chart.Area.ChartRectangle.Height / 2);
 
                     g.RotateTransform(-90);
