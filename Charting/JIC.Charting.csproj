@@ -38,6 +38,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Chart2D\AxesLabels.cs" />
     <Compile Include="Chart2D\Chart2D.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -45,9 +46,10 @@
       <DependentUpon>Chart2D.cs</DependentUpon>
     </Compile>
     <Compile Include="Chart2D\ChartArea.cs" />
-    <Compile Include="Chart2D\ChartAreaConverter.cs" />
+    <Compile Include="Chart2D\TypeConverters\ChartAreaConverter.cs" />
     <Compile Include="Chart2D\ChartTitle.cs" />
-    <Compile Include="Chart2D\ChartTitleConverter.cs" />
+    <Compile Include="Chart2D\TypeConverters\ChartTitleConverter.cs" />
+    <Compile Include="Chart2D\TypeConverters\AxesLabelsConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

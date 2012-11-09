@@ -22,6 +22,11 @@ namespace JIC.Charting
         /// </summary>
         private ChartTitle _title;
 
+        /// <summary>
+        /// The axes labels.
+        /// </summary>
+        private AxesLabels _labels;
+
         #endregion
 
         #region Constructors
@@ -34,6 +39,7 @@ namespace JIC.Charting
 
             _area = new ChartArea(this);
             _title = new ChartTitle(this);
+            _labels = new AxesLabels(this);
         }
 
         #endregion
@@ -71,6 +77,20 @@ namespace JIC.Charting
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+        public AxesLabels Labels
+        {
+            get { return _labels; }
+
+            set
+            {
+                if (value != null)
+                {
+                    _labels = value;
+                }
+            }
+        }
+
         #endregion
 
         #region Protected Members
@@ -85,6 +105,7 @@ namespace JIC.Charting
 
             _area.Draw(g);
             _title.Draw(g);
+            _labels.Draw(g);
         }
 
         /// <summary>

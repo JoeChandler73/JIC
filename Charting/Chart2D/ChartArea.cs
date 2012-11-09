@@ -19,14 +19,14 @@ namespace JIC.Charting
         private readonly Chart2D _chart;
 
         /// <summary>
-        /// The background color of the chart area.
+        /// The background colour of the chart area.
         /// </summary>
-        private Color _backColor;
+        private Color _backColour;
 
         /// <summary>
-        /// The border color of the chart area.
+        /// The border colour of the chart area.
         /// </summary>
-        private Color _borderColor;
+        private Color _borderColour;
 
         /// <summary>
         /// The rectangle contained by this chart area.
@@ -50,8 +50,8 @@ namespace JIC.Charting
         public ChartArea(Chart2D chart)
         {
             _chart = chart;
-            _backColor = chart.BackColor;
-            _borderColor = chart.BackColor;
+            _backColour = chart.BackColor;
+            _borderColour = chart.BackColor;
         }
 
         #endregion
@@ -59,31 +59,31 @@ namespace JIC.Charting
         #region Public Members
 
         /// <summary>
-        /// The background color of the chart area.
+        /// The background colour of the chart area.
         /// </summary>
-        [Description("The background color of the chart area."),
+        [Description("The background colour of the chart area."),
         Category("Appearance")]
-        public Color BackColor
+        public Color BackColour
         {
-            get { return _backColor; }
+            get { return _backColour; }
             set
             {
-                _backColor = value;
+                _backColour = value;
                 _chart.Invalidate();
             }
         }
 
         /// <summary>
-        /// The border color of the chart area.
+        /// The border colour of the chart area.
         /// </summary>
-        [Description("The border color of the chart area."),
+        [Description("The border colour of the chart area."),
         Category("Appearance")]
-        public Color BorderColor
+        public Color BorderColour
         {
-            get { return _borderColor; }
+            get { return _borderColour; }
             set
             {
-                _borderColor = value;
+                _borderColour = value;
                 _chart.Invalidate();
             }
         }
@@ -133,12 +133,12 @@ namespace JIC.Charting
             _plotRectangle = new Rectangle(_chartRectangle.Location, _chartRectangle.Size);
             _plotRectangle.Inflate(-Border, -Border);
 
-            using (Brush brush = new SolidBrush(BackColor))
+            using (Brush brush = new SolidBrush(BackColour))
             {
                 g.FillRectangle(brush, _chartRectangle);
             }
 
-            using (Pen pen = new Pen(BorderColor))
+            using (Pen pen = new Pen(BorderColour))
             {
                 g.DrawRectangle(pen, _plotRectangle);
             }

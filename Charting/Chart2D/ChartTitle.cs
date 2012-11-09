@@ -84,7 +84,7 @@ namespace JIC.Charting
         /// </summary>
         [Description("The colour used to display the title."),
         Category("Appearance")]
-        public Color Color
+        public Color Colour
         {
             get { return _colour; }
             set
@@ -100,7 +100,7 @@ namespace JIC.Charting
 
         internal void Draw(Graphics g)
         {
-            using (Brush brush = new SolidBrush(Color))
+            using (Brush brush = new SolidBrush(Colour))
             {
                 if (Title.Length > 0)
                 {
