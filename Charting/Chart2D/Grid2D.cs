@@ -140,7 +140,7 @@ namespace JIC.Charting
         /// <param name="g"></param>
         internal void Draw(Graphics g)
         {
-            using (Pen pen = new Pen(_colour, _thickness))
+            using (var pen = new Pen(_colour, _thickness))
             {
                 pen.DashStyle = DashStyle;
 
@@ -150,7 +150,7 @@ namespace JIC.Charting
 
                     for (x = _chart.Axes.XMin; x < _chart.Axes.XMax; x += _chart.Axes.XTick)
                     {
-                        float xx = (float)(_chart.Area.PlotRectangle.X + (x - _chart.Axes.XMin) * _chart.Area.PlotRectangle.Width / (_chart.Axes.XMax - _chart.Axes.XMin));
+                        var xx = (float)(_chart.Area.PlotRectangle.X + (x - _chart.Axes.XMin) * _chart.Area.PlotRectangle.Width / (_chart.Axes.XMax - _chart.Axes.XMin));
                         g.DrawLine(pen, xx, _chart.Area.PlotRectangle.Bottom, xx, _chart.Area.PlotRectangle.Bottom - _chart.Area.PlotRectangle.Height);
                     }
                 }
@@ -161,7 +161,7 @@ namespace JIC.Charting
 
                     for (y = _chart.Axes.YMin; y < _chart.Axes.YMax; y += _chart.Axes.YTick)
                     {
-                        float yy = (float)(_chart.Area.PlotRectangle.Bottom - (y - _chart.Axes.YMin) * _chart.Area.PlotRectangle.Height / (_chart.Axes.YMax - _chart.Axes.YMin));
+                        var yy = (float)(_chart.Area.PlotRectangle.Bottom - (y - _chart.Axes.YMin) * _chart.Area.PlotRectangle.Height / (_chart.Axes.YMax - _chart.Axes.YMin));
                         g.DrawLine(pen, _chart.Area.PlotRectangle.X, yy, _chart.Area.PlotRectangle.X + _chart.Area.PlotRectangle.Width, yy);
                     }
                 }

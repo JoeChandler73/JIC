@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Drawing;
+using System.Threading;
 using System.Windows.Forms;
 using System.ComponentModel;
+using System.Drawing.Drawing2D;
+using System.Collections.Generic;
 
 namespace JIC.Charting
 {
@@ -11,6 +14,22 @@ namespace JIC.Charting
     public partial class Chart2D : UserControl
     {
         #region Private Members
+
+        /// <summary>
+        /// Preferred scale steps used for auto-scaling the axes.
+        /// </summary>
+        private static readonly double[] PreferredScaleSteps = 
+        { 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 1.5, 2, 2.5, 5, 10, 20, 50, 100, 200, 500, 1000 };
+
+        /// <summary>
+        /// Synchronization context used to marshal calls onto the UI thread.
+        /// </summary>
+        private readonly SynchronizationContext _synchronizationContext;
+
+        /// <summary>
+        /// The list of series being displayed by this chart.
+        /// </summary>
+        private readonly List<Series2D> _seriesList;
 
         /// <summary>
         /// The canvas or background area for this chart.
@@ -47,11 +66,15 @@ namespace JIC.Charting
 
             this.SetStyle(ControlStyles.DoubleBuffer | ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.Opaque, true);
 
+            _synchronizationContext = SynchronizationContext.Current;
+
             _area = new ChartArea(this);
             _grid = new Grid2D(this);
             _title = new ChartTitle(this);
             _labels = new AxesLabels(this);
             _axes = new Axes2D(this);
+
+            _seriesList = new List<Series2D>();
         }
 
         #endregion
@@ -75,6 +98,9 @@ namespace JIC.Charting
             }
         }
 
+        /// <summary>
+        /// The chart grid.
+        /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public Grid2D Grid
         {
@@ -89,6 +115,9 @@ namespace JIC.Charting
             }
         }
 
+        /// <summary>
+        /// The title to display on the chart.
+        /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public ChartTitle Title
         {
@@ -103,6 +132,9 @@ namespace JIC.Charting
             }
         }
 
+        /// <summary>
+        /// The axes labels.
+        /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public AxesLabels Labels
         {
@@ -117,6 +149,9 @@ namespace JIC.Charting
             }
         }
 
+        /// <summary>
+        /// The chart axes.
+        /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public Axes2D Axes
         {
@@ -129,6 +164,23 @@ namespace JIC.Charting
                     _axes = value;
                 }
             }
+        }
+
+        /// <summary>
+        /// Add a new series to the chart.
+        /// </summary>
+        /// <param name="series"></param>
+        public void AddSeries(Series2D series)
+        {
+            _synchronizationContext.Post(state => AddSeriesPrivate((Series2D)state), series);
+        }
+
+        /// <summary>
+        /// Clear all series from the chart.
+        /// </summary>
+        public void Clear()
+        {
+            _synchronizationContext.Post(state => ClearPrivate(), null);
         }
 
         #endregion
@@ -148,6 +200,13 @@ namespace JIC.Charting
             _title.Draw(g);
             _labels.Draw(g);
             _axes.Draw(g);
+
+            GraphicsState graphicsState = g.Save();
+            g.SmoothingMode = SmoothingMode.HighQuality;
+
+            DrawSeries(g);
+
+            g.Restore(graphicsState);
         }
 
         /// <summary>
@@ -162,5 +221,193 @@ namespace JIC.Charting
         }
 
         #endregion
+
+        #region Private Members
+
+        /// <summary>
+        /// Add a new series to the chart.
+        /// </summary>
+        /// <param name="series"></param>
+        private void AddSeriesPrivate(Series2D series)
+        {
+            _seriesList.Add(series);
+
+            if (Axes.XAutoScale)
+            {
+                AutoScaleX();
+            }
+
+            if (Axes.YAutoScale)
+            {
+                AutoScaleY();
+            }
+
+            Invalidate();
+        }
+
+        /// <summary>
+        /// Clear all series from the chart.
+        /// </summary>
+        private void ClearPrivate()
+        {
+            _seriesList.Clear();
+
+            Invalidate();
+        }
+
+        /// <summary>
+        /// Determine the best scale for the x axis.
+        /// </summary>
+        private void AutoScaleX()
+        {
+            if (_seriesList.Count == 0)
+            {
+                return;
+            }
+
+            double min = double.MaxValue;
+            double max = double.MinValue;
+
+            foreach (Series2D series in _seriesList)
+            {
+                min = Math.Min(min, series.XMin);
+                max = Math.Max(max, series.XMax);
+            }
+
+            CalculateXTickScale(min, max);
+        }
+
+        /// <summary>
+        /// Determine the best scale for the y axis.
+        /// </summary>
+        private void AutoScaleY()
+        {
+            if (_seriesList.Count == 0)
+            {
+                return;
+            }
+
+            double min = double.MaxValue;
+            double max = double.MinValue;
+
+            foreach (Series2D series in _seriesList)
+            {
+                min = Math.Min(min, series.YMin);
+                max = Math.Max(max, series.YMax);
+            }
+
+            if (min == max)
+            {
+                double temp = min;
+                min -= 0.05 * temp;
+                max += 0.05 * temp;
+            }
+
+            CalculateYTickScale(min, max);
+        }
+
+        /// <summary>
+        /// Determine the best x tick scale.
+        /// </summary>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        private void CalculateXTickScale(double min, double max)
+        {
+            double range = max - min;
+            double delta = double.MaxValue;
+            double bestStep = PreferredScaleSteps[0];
+
+            foreach (double step in PreferredScaleSteps)
+            {
+                double difference = Math.Abs((range / step) - 8);
+
+                if (difference < delta)
+                {
+                    bestStep = step;
+                    delta = difference;
+                }
+            }
+
+            float xMin = (float)bestStep * (int)Math.Floor(min / bestStep);
+            float xMax = (float)bestStep * (int)Math.Ceiling(max / bestStep);
+            float xTick = (float)bestStep;
+
+            Axes.ReScaleX(xMin, xMax, xTick);
+        }
+
+        /// <summary>
+        /// Determine the best y tick scale.
+        /// </summary>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        private void CalculateYTickScale(double min, double max)
+        {
+            double range = max - min;
+            double delta = double.MaxValue;
+            double bestStep = PreferredScaleSteps[0];
+
+            foreach (double step in PreferredScaleSteps)
+            {
+                double difference = Math.Abs((range / step) - 8);
+
+                if (difference < delta)
+                {
+                    bestStep = step;
+                    delta = difference;
+                }
+            }
+
+            float yMin = (float)bestStep * (int)Math.Floor(min / bestStep);
+            float yMax = (float)bestStep * (int)Math.Ceiling(max / bestStep);
+            float yTick = (float)bestStep;
+
+            Axes.ReScaleY(yMin, yMax, yTick);
+        }
+
+        /// <summary>
+        /// Draw any series added to this chart.
+        /// </summary>
+        /// <param name="g"></param>
+        private void DrawSeries(Graphics g)
+        {
+            foreach (var series in _seriesList)
+            {
+                using (var pen = new Pen(series.LineStyle.Colour, series.LineStyle.Thickness))
+                {
+                    pen.DashStyle = series.LineStyle.DashStyle;
+
+                    var points = new PointF[series.Count];
+
+                    int i = 0;
+
+                    foreach (var point in series)
+                    {
+                        var x = (float)(Area.PlotRectangle.X + ((float)point.X - Axes.XMin) * Area.PlotRectangle.Width / (Axes.XMax - Axes.XMin));
+                        var y = (float)(Area.PlotRectangle.Bottom - ((float)point.Y - Axes.YMin) * Area.PlotRectangle.Height / (Axes.YMax - Axes.YMin));
+
+                        series.Symbol.Draw(g, x, y);
+
+                        points[i] = new PointF(x, y);
+
+                        i++;
+                    }
+
+                    if (series.LineStyle.Visible)
+                    {
+                        if (series.LineStyle.Interpolation == Interpolation.Linear)
+                        {
+                            g.DrawLines(pen, points);
+                        }
+
+                        if (series.LineStyle.Interpolation == Interpolation.Spline)
+                        {
+                            g.DrawCurve(pen, points, 0.5f);
+                        }
+                    }
+                }
+            }
+        }
+
+        #endregion 
     }
 }

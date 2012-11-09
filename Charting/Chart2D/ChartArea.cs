@@ -133,12 +133,12 @@ namespace JIC.Charting
             _plotRectangle = new Rectangle(_chartRectangle.Location, _chartRectangle.Size);
             _plotRectangle.Inflate(-Border, -Border);
 
-            using (Brush brush = new SolidBrush(BackColour))
+            using (var brush = new SolidBrush(BackColour))
             {
                 g.FillRectangle(brush, _chartRectangle);
             }
 
-            using (Pen pen = new Pen(BorderColour))
+            using (var pen = new Pen(BorderColour))
             {
                 g.DrawRectangle(pen, _plotRectangle);
             }

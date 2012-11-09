@@ -120,14 +120,14 @@ namespace JIC.Charting
         /// <param name="g"></param>
         internal void Draw(Graphics g)
         {
-            float offsetX = _chart.Area.ChartRectangle.Width / 30f;
-            float offsetY = _chart.Area.ChartRectangle.Height / 30f;
+            var offsetX = _chart.Area.ChartRectangle.Width / 30f;
+            var offsetY = _chart.Area.ChartRectangle.Height / 30f;
 
-            using (Brush brush = new SolidBrush(Colour))
+            using (var brush = new SolidBrush(Colour))
             {
                 if (LabelX.Length > 0)
                 {
-                    SizeF size = g.MeasureString(LabelX, Font);
+                    var size = g.MeasureString(LabelX, Font);
 
                     g.DrawString(LabelX,
                                  Font,
@@ -138,11 +138,11 @@ namespace JIC.Charting
 
                 if (LabelY.Length > 0)
                 {
-                    StringFormat stringFormat = new StringFormat();
+                    var stringFormat = new StringFormat();
                     stringFormat.Alignment = StringAlignment.Center;
-                    SizeF size = g.MeasureString(LabelY, Font);
+                    var size = g.MeasureString(LabelY, Font);
 
-                    GraphicsState graphicsState = g.Save();
+                    var graphicsState = g.Save();
 
                     g.TranslateTransform(_chart.Area.ChartRectangle.X,
                                          _chart.Area.ChartRectangle.Height / 2);

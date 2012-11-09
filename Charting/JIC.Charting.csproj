@@ -47,6 +47,17 @@
       <DependentUpon>Chart2D.cs</DependentUpon>
     </Compile>
     <Compile Include="Chart2D\ChartArea.cs" />
+    <Compile Include="Chart2D\Interpolation.cs" />
+    <Compile Include="Chart2D\LineStyle.cs" />
+    <Compile Include="Chart2D\Point2D.cs" />
+    <Compile Include="Chart2D\Series2D.cs" />
+    <Compile Include="Chart2D\Symbols\Circle.cs" />
+    <Compile Include="Chart2D\Symbols\Box.cs" />
+    <Compile Include="Chart2D\Symbols\Diamond.cs" />
+    <Compile Include="Chart2D\Symbols\Square.cs" />
+    <Compile Include="Chart2D\Symbols\Dot.cs" />
+    <Compile Include="Chart2D\Symbols\None.cs" />
+    <Compile Include="Chart2D\Symbols\Symbol.cs" />
     <Compile Include="Chart2D\TypeConverters\ChartAreaConverter.cs" />
     <Compile Include="Chart2D\ChartTitle.cs" />
     <Compile Include="Chart2D\TypeConverters\ChartTitleConverter.cs" />

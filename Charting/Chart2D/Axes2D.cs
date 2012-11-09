@@ -299,17 +299,17 @@ namespace JIC.Charting
         /// <param name="g"></param>
         internal void Draw(Graphics g)
         {
-            using (Brush brush = new SolidBrush(_tickColour))
+            using (var brush = new SolidBrush(_tickColour))
             {
-                SizeF size = g.MeasureString("0", _tickFont);
+                var size = g.MeasureString("0", _tickFont);
 
                 double x;
 
                 for (x = _xMin; x <= _xMax; x += _xTick)
                 {
-                    float xx = (float)(_chart.Area.PlotRectangle.X + (x - _xMin) * _chart.Area.PlotRectangle.Width / (_xMax - _xMin));
+                    var xx = (float)(_chart.Area.PlotRectangle.X + (x - _xMin) * _chart.Area.PlotRectangle.Width / (_xMax - _xMin));
                     size = g.MeasureString(x.ToString(_xTickFormat), _tickFont);
-                    StringFormat stringFormat = new StringFormat();
+                    var stringFormat = new StringFormat();
                     stringFormat.Alignment = StringAlignment.Far;
 
                     g.DrawString(x.ToString(_xTickFormat), 
@@ -326,8 +326,8 @@ namespace JIC.Charting
 
                 for (y = _yMin; y <= _yMax; y += _yTick)
                 {
-                    float yy = (float)(_chart.Area.PlotRectangle.Bottom - (y - _yMin) * _chart.Area.PlotRectangle.Height / (_yMax - _yMin));
-                    StringFormat stringFormat = new StringFormat();
+                    var yy = (float)(_chart.Area.PlotRectangle.Bottom - (y - _yMin) * _chart.Area.PlotRectangle.Height / (_yMax - _yMin));
+                    var stringFormat = new StringFormat();
                     stringFormat.Alignment = StringAlignment.Far;
 
                     g.DrawString(y.ToString(_yTickFormat), 

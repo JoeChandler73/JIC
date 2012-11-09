@@ -104,11 +104,11 @@ namespace JIC.Charting
         /// <param name="g"></param>
         internal void Draw(Graphics g)
         {
-            using (Brush brush = new SolidBrush(Colour))
+            using (var brush = new SolidBrush(Colour))
             {
                 if (Title.Length > 0)
                 {
-                    SizeF size = g.MeasureString(Title, Font);
+                    var size = g.MeasureString(Title, Font);
 
                     g.DrawString(Title,
                                  Font,
