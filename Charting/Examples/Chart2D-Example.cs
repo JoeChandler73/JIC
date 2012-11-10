@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Threading.Tasks;
 
 using JIC.Charting;
 
@@ -13,6 +14,8 @@ namespace JIC.Charting.Examples
         private Series2D _sin;
         private Series2D _cos;
 
+        private AreaSeries2D _area;
+
         public MainForm()
         {
             InitializeComponent();
@@ -20,7 +23,8 @@ namespace JIC.Charting.Examples
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            BuildSeries();
+            Task.Factory.StartNew(BuildSeries);
+            Task.Factory.StartNew(BuildAreaSeries);
         }
 
         private void BuildSeries()
@@ -65,6 +69,26 @@ namespace JIC.Charting.Examples
 
             _chart.AddSeries(_sin);
             _chart.AddSeries(_cos);
+        }
+
+        private void BuildAreaSeries()
+        {
+            _area = new AreaSeries2D()
+            {
+                FillColour = Color.LightBlue,
+                Opacity = 100
+            };
+
+            double dx = 4 * Math.PI / size;
+
+            for (int i = 0; i <= size; i++)
+            {
+                double x = -2 * Math.PI + i * dx;
+
+                _area.AddPoint(x, Math.Sin(x), Math.Sin(x) + 0.5);
+            }
+
+            _chart.AddSeries(_area);
         }
     }
 }

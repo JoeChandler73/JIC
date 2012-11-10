@@ -1,20 +1,25 @@
 ﻿using System;
-using System.Collections;
+using System.Drawing;
 using System.Collections.Generic;
 
 namespace JIC.Charting
 {
     /// <summary>
-    /// Represent an xy series for charting.
+    /// Represents an xy area series for charting
     /// </summary>
-    public class Series2D : IEnumerable<Point2D>
+    public class AreaSeries2D
     {
         #region Private Members
 
         /// <summary>
-        /// The collection of points making up this series.
+        /// The collection of points making up the lower series.
         /// </summary>
-        private readonly List<Point2D> _points = new List<Point2D>();
+        private readonly List<Point2D> _lowerPoints = new List<Point2D>();
+
+        /// <summary>
+        /// The collection of points making up the upper series.
+        /// </summary>
+        private readonly List<Point2D> _upperPoints = new List<Point2D>();
 
         /// <summary>
         /// The minimum x value.
@@ -46,29 +51,34 @@ namespace JIC.Charting
         public string Name;
 
         /// <summary>
-        /// The <see cref="LineStyle"/> to use when charting this series.
+        /// The fill colour to use.
         /// </summary>
-        public LineStyle LineStyle = new LineStyle();
+        public Color FillColour = Color.White;
 
         /// <summary>
-        /// The <see cref="Symbol"/> to use when charting this series.
+        /// The opacity to use when applying the fill.
         /// </summary>
-        public Symbol Symbol = None.Instance;
+        public int Opacity = 255;
 
         /// <summary>
-        /// Add a new point to this series.
+        /// Add a new pair of points to this series.
         /// </summary>
         /// <param name="x"></param>
-        /// <param name="y"></param>
-        public void AddPoint(double x, double y)
+        /// <param name="lower"></param>
+        /// <param name="upper"></param>
+        public void AddPoint(double x, double lower, double upper)
         {
-            _points.Add(new Point2D(x, y));
+            _lowerPoints.Add(new Point2D(x, lower));
+            _upperPoints.Add(new Point2D(x, upper));
 
             _xMin = Math.Min(_xMin, x);
             _xMax = Math.Max(_xMax, x);
 
-            _yMin = Math.Min(_yMin, y);
-            _yMax = Math.Max(_yMax, y);
+            _yMin = Math.Min(_yMin, lower);
+            _yMin = Math.Min(_yMin, upper);
+
+            _yMax = Math.Max(_yMax, lower);
+            _yMax = Math.Max(_yMax, upper);
         }
 
         /// <summary>
@@ -78,7 +88,7 @@ namespace JIC.Charting
         {
             get
             {
-                return _points.Count;
+                return _lowerPoints.Count;
             }
         }
 
@@ -87,7 +97,8 @@ namespace JIC.Charting
         /// </summary>
         public void Clear()
         {
-            _points.Clear();
+            _lowerPoints.Clear();
+            _upperPoints.Clear();
         }
 
         /// <summary>
@@ -134,18 +145,20 @@ namespace JIC.Charting
             }
         }
 
-        #endregion
-
-        #region IEnumerable<Point2D> Members
-
-        public IEnumerator<Point2D> GetEnumerator()
+        public IEnumerable<Point2D> Lower
         {
-            return _points.GetEnumerator();
+            get
+            {
+                return _lowerPoints;
+            }
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
+        public IEnumerable<Point2D> Upper
         {
-            return GetEnumerator();
+            get
+            {
+                return _upperPoints;
+            }
         }
 
         #endregion

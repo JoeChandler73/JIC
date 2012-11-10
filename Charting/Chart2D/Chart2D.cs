@@ -32,6 +32,11 @@ namespace JIC.Charting
         private readonly List<Series2D> _seriesList;
 
         /// <summary>
+        /// The list of area series being displayed by this chart.
+        /// </summary>
+        private readonly List<AreaSeries2D> _areaSeriesList;
+
+        /// <summary>
         /// The canvas or background area for this chart.
         /// </summary>
         private ChartArea _area;
@@ -75,6 +80,7 @@ namespace JIC.Charting
             _axes = new Axes2D(this);
 
             _seriesList = new List<Series2D>();
+            _areaSeriesList = new List<AreaSeries2D>();
         }
 
         #endregion
@@ -176,6 +182,15 @@ namespace JIC.Charting
         }
 
         /// <summary>
+        /// Add a new are series to the chart.
+        /// </summary>
+        /// <param name="series"></param>
+        public void AddSeries(AreaSeries2D series)
+        {
+            _synchronizationContext.Post(state => AddSeriesPrivate((AreaSeries2D)state), series);
+        }
+
+        /// <summary>
         /// Clear all series from the chart.
         /// </summary>
         public void Clear()
@@ -204,6 +219,7 @@ namespace JIC.Charting
             GraphicsState graphicsState = g.Save();
             g.SmoothingMode = SmoothingMode.HighQuality;
 
+            DrawAreaSeries(g);
             DrawSeries(g);
 
             g.Restore(graphicsState);
@@ -246,11 +262,33 @@ namespace JIC.Charting
         }
 
         /// <summary>
+        /// Add a new area series to the chart.
+        /// </summary>
+        /// <param name="series"></param>
+        private void AddSeriesPrivate(AreaSeries2D series)
+        {
+            _areaSeriesList.Add(series);
+
+            if (Axes.XAutoScale)
+            {
+                AutoScaleX();
+            }
+
+            if (Axes.YAutoScale)
+            {
+                AutoScaleY();
+            }
+
+            Invalidate();
+        }
+
+        /// <summary>
         /// Clear all series from the chart.
         /// </summary>
         private void ClearPrivate()
         {
             _seriesList.Clear();
+            _areaSeriesList.Clear();
 
             Invalidate();
         }
@@ -260,7 +298,8 @@ namespace JIC.Charting
         /// </summary>
         private void AutoScaleX()
         {
-            if (_seriesList.Count == 0)
+            if (_seriesList.Count == 0 && 
+                _areaSeriesList.Count == 0)
             {
                 return;
             }
@@ -268,7 +307,13 @@ namespace JIC.Charting
             double min = double.MaxValue;
             double max = double.MinValue;
 
-            foreach (Series2D series in _seriesList)
+            foreach (var series in _seriesList)
+            {
+                min = Math.Min(min, series.XMin);
+                max = Math.Max(max, series.XMax);
+            }
+
+            foreach (var series in _areaSeriesList)
             {
                 min = Math.Min(min, series.XMin);
                 max = Math.Max(max, series.XMax);
@@ -282,7 +327,8 @@ namespace JIC.Charting
         /// </summary>
         private void AutoScaleY()
         {
-            if (_seriesList.Count == 0)
+            if (_seriesList.Count == 0 &&
+                _areaSeriesList.Count == 0)
             {
                 return;
             }
@@ -291,6 +337,12 @@ namespace JIC.Charting
             double max = double.MinValue;
 
             foreach (Series2D series in _seriesList)
+            {
+                min = Math.Min(min, series.YMin);
+                max = Math.Max(max, series.YMax);
+            }
+
+            foreach (var series in _areaSeriesList)
             {
                 min = Math.Min(min, series.YMin);
                 max = Math.Max(max, series.YMax);
@@ -404,6 +456,56 @@ namespace JIC.Charting
                             g.DrawCurve(pen, points, 0.5f);
                         }
                     }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Draw any area series added to this chart.
+        /// </summary>
+        /// <param name="g"></param>
+        private void DrawAreaSeries(Graphics g)
+        {
+            foreach (var series in _areaSeriesList)
+            {
+                var colour = Color.FromArgb(series.Opacity, series.FillColour.R, series.FillColour.G, series.FillColour.B);
+
+                using (var brush = new SolidBrush(colour))
+                {
+                    var lowerPoints = new List<PointF>();
+                    var upperPoints = new List<PointF>();
+
+                    foreach (var point in series.Lower)
+                    {
+                        float x = (float)(Area.PlotRectangle.X + ((float)point.X - Axes.XMin) * Area.PlotRectangle.Width / (Axes.XMax - Axes.XMin));
+                        float y = (float)(Area.PlotRectangle.Bottom - ((float)point.Y - Axes.YMin) * Area.PlotRectangle.Height / (Axes.YMax - Axes.YMin));
+
+                        lowerPoints.Add(new PointF(x, y));
+                    }
+
+                    foreach (var point in series.Upper)
+                    {
+                        float x = (float)(Area.PlotRectangle.X + ((float)point.X - Axes.XMin) * Area.PlotRectangle.Width / (Axes.XMax - Axes.XMin));
+                        float y = (float)(Area.PlotRectangle.Bottom - ((float)point.Y - Axes.YMin) * Area.PlotRectangle.Height / (Axes.YMax - Axes.YMin));
+
+                        upperPoints.Add(new PointF(x, y));
+                    }
+
+                    var points = new PointF[lowerPoints.Count + upperPoints.Count];
+
+                    int index = 0;
+
+                    for (int i = 0; i < lowerPoints.Count; i++)
+                    {
+                        points[index++] = lowerPoints[i];
+                    }
+
+                    for (int i = upperPoints.Count - 1; i >= 0; i--)
+                    {
+                        points[index++] = upperPoints[i];
+                    }
+
+                    g.FillPolygon(brush, points);
                 }
             }
         }
