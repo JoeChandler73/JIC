@@ -13,7 +13,8 @@ namespace JIC.Charting.Examples
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+            Application.Run(new Chart2D_Example());
+            //Application.Run(new AnimatedChart2D_Example());
         }
     }
 }

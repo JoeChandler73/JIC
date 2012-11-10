@@ -46,6 +46,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AnimatedChart2D-Example.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AnimatedChart2D-Example.Designer.cs">
+      <DependentUpon>AnimatedChart2D-Example.cs</DependentUpon>
+    </Compile>
     <Compile Include="Chart2D-Example.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -54,6 +60,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="AnimatedChart2D-Example.resx">
+      <DependentUpon>AnimatedChart2D-Example.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Chart2D-Example.resx">
       <DependentUpon>Chart2D-Example.cs</DependentUpon>
     </EmbeddedResource>

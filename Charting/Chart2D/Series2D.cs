@@ -41,6 +41,11 @@ namespace JIC.Charting
         #region Public Members
 
         /// <summary>
+        /// Event raised when the series has been changed.
+        /// </summary>
+        public event EventHandler Changed;
+
+        /// <summary>
         /// The name of this series.
         /// </summary>
         public string Name;
@@ -69,6 +74,30 @@ namespace JIC.Charting
 
             _yMin = Math.Min(_yMin, y);
             _yMax = Math.Max(_yMax, y);
+        }
+
+        /// <summary>
+        /// Accessors for the points in the series.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public Point2D this[int index]
+        {
+            get
+            {
+                return _points[index];
+            }
+
+            set
+            {
+                _points[index] = value;
+
+                _xMin = Math.Min(_xMin, value.X);
+                _xMax = Math.Max(_xMax, value.X);
+
+                _yMin = Math.Min(_yMin, value.Y);
+                _yMax = Math.Max(_yMax, value.Y);
+            }
         }
 
         /// <summary>
@@ -131,6 +160,19 @@ namespace JIC.Charting
             get
             {
                 return _yMax;
+            }
+        }
+
+        /// <summary>
+        /// Raise a series changed event to any listeners. 
+        /// </summary>
+        public void RaiseChangedEvent()
+        {
+            var handler = Changed;
+
+            if (handler != null)
+            {
+                handler(this, EventArgs.Empty);
             }
         }
 

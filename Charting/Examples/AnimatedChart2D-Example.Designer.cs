@@ -1,6 +1,6 @@
 ﻿namespace JIC.Charting.Examples
 {
-    partial class Chart2D_Example
+    partial class AnimatedChart2D_Example
     {
         /// <summary>
         /// Required designer variable.
@@ -60,21 +60,21 @@
             this._chart.Labels.LabelY = "Y Axis";
             this._chart.Location = new System.Drawing.Point(0, 0);
             this._chart.Name = "_chart";
-            this._chart.Size = new System.Drawing.Size(1068, 650);
-            this._chart.TabIndex = 0;
+            this._chart.Size = new System.Drawing.Size(1025, 639);
+            this._chart.TabIndex = 1;
             this._chart.Title.Colour = System.Drawing.Color.Gray;
             this._chart.Title.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this._chart.Title.Title = "Chart2D Example";
             // 
-            // MainForm
+            // AnimatedChart2D_Example
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1068, 650);
+            this.ClientSize = new System.Drawing.Size(1025, 639);
             this.Controls.Add(this._chart);
-            this.Name = "MainForm";
-            this.Text = "Chart2D Example";
-            this.Load += new System.EventHandler(this.MainForm_Load);
+            this.Name = "AnimatedChart2D_Example";
+            this.Text = "Animated 2D Chart Example";
+            this.Load += new System.EventHandler(this.AnimatedChart2D_Example_Load);
             this.ResumeLayout(false);
 
         }
@@ -84,4 +84,3 @@
         private Chart2D _chart;
     }
 }
-

@@ -7,7 +7,7 @@ using JIC.Charting;
 
 namespace JIC.Charting.Examples
 {
-    public partial class MainForm : Form
+    public partial class Chart2D_Example : Form
     {
         private const int size = 200;
 
@@ -16,7 +16,7 @@ namespace JIC.Charting.Examples
 
         private AreaSeries2D _area;
 
-        public MainForm()
+        public Chart2D_Example()
         {
             InitializeComponent();
         }

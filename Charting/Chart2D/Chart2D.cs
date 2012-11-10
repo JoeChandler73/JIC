@@ -248,6 +248,8 @@ namespace JIC.Charting
         {
             _seriesList.Add(series);
 
+            series.Changed += SeriesChangedEventHandler;
+
             if (Axes.XAutoScale)
             {
                 AutoScaleX();
@@ -287,6 +289,11 @@ namespace JIC.Charting
         /// </summary>
         private void ClearPrivate()
         {
+            foreach (var series in _seriesList)
+            {
+                series.Changed -= SeriesChangedEventHandler;
+            }
+
             _seriesList.Clear();
             _areaSeriesList.Clear();
 
@@ -510,6 +517,33 @@ namespace JIC.Charting
             }
         }
 
-        #endregion 
+        #endregion
+
+        #region Event Handlers
+
+        /// <summary>
+        /// Handler for series changed event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SeriesChangedEventHandler(object sender, EventArgs e)
+        {
+            _synchronizationContext.Post(state =>
+            {
+                if (Axes.XAutoScale)
+                {
+                    AutoScaleX();
+                }
+
+                if (Axes.YAutoScale)
+                {
+                    AutoScaleY();
+                }
+
+                Invalidate();
+            }, null);
+        }
+
+        #endregion
     }
 }
